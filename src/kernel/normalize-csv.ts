@@ -99,9 +99,12 @@ export function normalizeCSV(
   const headers = parseResult.meta.fields ?? [];
 
   // §7.1.2 step: Check for duplicate headers after trimming
-  // Use trimmedHeaders (pre-rename) since Papa Parse silently renames duplicates
+  // Use trimmedHeaders (pre-rename) since Papa Parse silently renames duplicates.
+  // Papa Parse calls transformHeader twice (delimiter detection + main parse),
+  // so we take only the first headers.length entries.
   const headerSet = new Set<string>();
-  for (const h of trimmedHeaders) {
+  for (let i = 0; i < headers.length && i < trimmedHeaders.length; i++) {
+    const h = trimmedHeaders[i];
     if (headerSet.has(h)) {
       collector.add(bibss006(h));
     }
