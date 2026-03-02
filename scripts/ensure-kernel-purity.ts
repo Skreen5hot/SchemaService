@@ -21,12 +21,18 @@ const __dirname = dirname(__filename);
 // But since we compile with tsconfig.test.json, kernel files are at dist-tests/src/kernel/
 const kernelDir = join(__dirname, "..", "src", "kernel");
 
+// Whitelisted runtime dependencies that kernel modules may import.
+// Papa Parse is the sole runtime dependency (ADR-002). Do not extend this
+// list without Orchestrator approval.
+const WHITELISTED_PACKAGES = ["papaparse"];
+const whitelistAlternation = WHITELISTED_PACKAGES.join("|");
+
 const FORBIDDEN_PATTERNS = [
   /from\s+["']\.\.\/(?!kernel)/,       // relative imports leaving kernel dir (but not ./kernel)
   /from\s+["']\.\.\/\.\.\//,           // imports going two levels up
   /from\s+["'].*\/adapters\//,          // explicit adapter imports
   /require\s*\(\s*["'](?!node:)/,       // CommonJS require (except node: builtins)
-  /import\s+.*from\s+["'](?!\.\/|node:)/, // absolute imports (except relative and node: builtins)
+  new RegExp(`import\\s+.*from\\s+["'](?!\\.\/|node:|${whitelistAlternation})`), // absolute imports (except relative, node: builtins, and whitelisted packages)
 ];
 
 let violations = 0;

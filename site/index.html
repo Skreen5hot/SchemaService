@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIBSS Demo — Schema Inference</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>BIBSS Demo</h1>
+    <p class="subtitle">Paste or upload CSV/JSON data to infer its schema instantly</p>
+  </header>
+
+  <main>
+    <section class="input-panel">
+      <div class="panel-header">
+        <h2>Input</h2>
+        <span id="format-badge" class="badge hidden"></span>
+      </div>
+      <div class="input-area" id="drop-zone">
+        <textarea
+          id="input-text"
+          placeholder="name,age,active&#10;Alice,30,true&#10;Bob,25,false&#10;Charlie,35,true"
+          spellcheck="false"
+        ></textarea>
+        <div class="drop-overlay hidden" id="drop-overlay">Drop file here</div>
+      </div>
+      <div class="input-actions">
+        <button id="btn-infer" class="btn btn-primary">Infer Schema</button>
+        <button id="btn-clear" class="btn btn-secondary">Clear</button>
+        <label class="btn btn-secondary btn-file">
+          Upload File
+          <input type="file" id="file-input" accept=".csv,.json,.txt" hidden>
+        </label>
+        <div class="sample-dropdown">
+          <button id="btn-samples" class="btn btn-secondary">Load Example &#9662;</button>
+          <div class="sample-menu hidden" id="sample-menu">
+            <button data-sample="employees">Employee CSV</button>
+            <button data-sample="products">Product JSON</button>
+            <button data-sample="survey">Survey CSV</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="output-panel">
+      <div class="panel-header">
+        <h2>Output</h2>
+        <div class="tab-bar">
+          <button class="tab active" data-tab="jsonschema">JSON Schema</button>
+          <button class="tab" data-tab="cism">CISM</button>
+        </div>
+      </div>
+      <div class="output-area">
+        <div id="output-empty" class="output-empty">
+          Paste or upload data and click <strong>Infer Schema</strong> to see the result
+        </div>
+        <pre id="output-code" class="output-code hidden"><code id="output-content"></code></pre>
+        <button id="btn-copy" class="btn btn-copy hidden">Copy</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="diagnostics-bar" class="diagnostics-bar hidden">
+    <button id="btn-toggle-diag" class="diagnostics-toggle">
+      Diagnostics <span id="diag-count"></span> &#9662;
+    </button>
+    <ul id="diagnostics-list" class="diagnostics-list hidden"></ul>
+  </div>
+
+  <footer>
+    <p>BIBSS v1.3 &middot; All processing happens in your browser &middot; No data leaves this page</p>
+  </footer>
+
+  <script src="dist/bibss.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
